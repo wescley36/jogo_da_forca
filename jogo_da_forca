@@ -1,0 +1,76 @@
+from random import randint
+import os
+
+palavras = ['guaxinim', 'lesma', 'avestruz', 'camelo', 'cabra', 'águia', 'macaco', 'molusco', 'minhoca', 'crocodilo', 'lagarto']
+aleatorio = randint(0, (len(palavras)-1))
+palavra_secreta = palavras[aleatorio]
+palavra_acertada = len(palavra_secreta)*'*'
+continue_game = True
+letra_repetida = ''
+tentativas = 0
+
+print(f'Vamos jogar forca!')
+
+while continue_game == True:
+    while True:
+        letra_player = input('Letra ou palavra: ').strip().lower()
+        if letra_player == '' or letra_player.isdigit():
+            print('Digite uma letra por favor')
+            continue
+        if len(letra_player) > 1:
+            if letra_player == palavra_secreta:
+                palavra_acertada = letra_player
+            else:
+                print(50*'-=')
+                print('A palavra esta incorreta!')
+                tentativas +=1
+                continue
+        if letra_player in letra_repetida:
+            print('Você já tentou essa letra')
+            continue
+        else:
+            os.system('cls' if os.name == 'nt' else 'clear')
+            letra_repetida += letra_player
+            tentativas +=1
+            print(50*'-=')
+            print(f'Letras já digitadas: {letra_repetida}')
+            print(f'Número de tentativas {tentativas}')
+            break
+
+        
+    palavra_antes_do_for = palavra_acertada
+    for indice, letra in enumerate(palavra_secreta):
+        if letra_player == letra:
+            palavra_acertada = palavra_acertada[:indice] + letra + palavra_acertada[indice + 1:]
+    if palavra_antes_do_for == palavra_acertada:
+        print(f'A palavra não contém a letra "{letra_player.upper()}"')
+    else:
+        palavra_antes_do_for = palavra_acertada
+
+
+    print(50*'-=')
+    print(f'{palavra_acertada:^15} {len(palavra_acertada)} letras')
+
+
+    if '*' not in palavra_acertada:
+        os.system('cls' if os.name == 'nt' else 'clear')
+        print(50*'-=')
+        print(f'Você acertou! A palavra era {palavra_secreta}')
+        print(f'Você precisou de {tentativas} tentativas')
+        print(50*'-=')
+        cond = ''
+        while True:
+            cond = input('Quer jogar de novo? [s/n] ').strip().lower()[0]
+            if cond == 's':
+                aleatorio = randint(0, len(palavras)-1)
+                palavra_secreta = palavras[aleatorio]
+                palavra_acertada = len(palavra_secreta)*'*'
+                letra_repetida = ''
+                tentativas=0
+                break
+            elif cond == 'n':
+                print('Volte Sempre!')
+                continue_game = False
+                break
+            else:
+                print('Digite Sim ou Não por favor')
